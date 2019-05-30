@@ -1,4 +1,4 @@
-name := "MatrixFactorization"
+name := "matrix-factorization"
 
 version := "0.1"
 
