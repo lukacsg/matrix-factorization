@@ -5,7 +5,7 @@ import types.{Vector, ItemVector}
   * Implementations for LEMP Pruning functions from this paper:
   * https://ub-madoc.bib.uni-mannheim.de/40018/1/teflioudi15lemp.pdf
   */
-object LEMPPruningFunctions {
+object PruningFunctions {
 
   /**
     * A function that implements LEMP LENGTH pruning

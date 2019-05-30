@@ -4,17 +4,17 @@ package LEMP
 /**
   * The base class for LEMP pruning strategies
   */
-sealed abstract class LEMPPruningStrategy
+sealed abstract class PruningStrategy
 
 /**
   * Indicates the use of the Length-based pruning
   */
-final case class LENGTH() extends LEMPPruningStrategy
+final case class LENGTH() extends PruningStrategy
 
 /**
   * Indicates the use of Coordinate-based pruning
   */
-final case class COORD() extends LEMPPruningStrategy
+final case class COORD() extends PruningStrategy
 
 /**
   * Indicates the use of Incremental pruning
@@ -23,7 +23,7 @@ final case class COORD() extends LEMPPruningStrategy
   * The number of focus coordinates to prune by.
   * Focus coordinates will be the largest coordinates of the user vector
   */
-final case class INCR(numFocusCoordinates: Int) extends LEMPPruningStrategy // Incremental pruning
+final case class INCR(numFocusCoordinates: Int) extends PruningStrategy // Incremental pruning
 
 /**
   * Indicates a choice between Length-based and Coordinate-based pruning,
@@ -34,7 +34,7 @@ final case class INCR(numFocusCoordinates: Int) extends LEMPPruningStrategy // I
   * It is the threshold of the ratio of the smallest and largest vector length in a bucket.
   * It is not the same as the threshold described in section 4.4 of the related paper.
   */
-final case class LC(algorithmSwitchThreshold: Double) extends LEMPPruningStrategy // Chooses between LENGTH and COORD pruning in each bucket
+final case class LC(algorithmSwitchThreshold: Double) extends PruningStrategy // Chooses between LENGTH and COORD pruning in each bucket
 
 /**
   * Indicates a choice between Length-based and Incremental pruning,
@@ -48,9 +48,9 @@ final case class LC(algorithmSwitchThreshold: Double) extends LEMPPruningStrateg
   * It is the threshold of the ratio of the smallest and largest vector length in a bucket.
   * It is not the same as the threshold described in section 4.4 of the related paper.
   */
-final case class LI(numFocusCoordinates: Int, algorithmSwitchThreshold: Double) extends LEMPPruningStrategy // Chooses between LENGTH and INCR pruning in each bucket
+final case class LI(numFocusCoordinates: Int, algorithmSwitchThreshold: Double) extends PruningStrategy // Chooses between LENGTH and INCR pruning in each bucket
 
-object LEMPPruningStrategy {
+object PruningStrategy {
 
   private val LENGTH_REGEX = "length".r
   private val COORD_REGEX = "coord".r
@@ -66,7 +66,7 @@ object LEMPPruningStrategy {
     * @return
     * The LEMP Pruning strategy parsed
     */
-  def fromString(s:String):LEMPPruningStrategy = s match {
+  def fromString(s:String):PruningStrategy = s match {
     case LENGTH_REGEX() => LENGTH()
     case COORD_REGEX() => COORD()
     case INCR_REGEX(numFocusCoordinates) => INCR(numFocusCoordinates.toInt)
