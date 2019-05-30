@@ -1,8 +1,8 @@
 package types
 
-
 case class Vector(value: Array[Double]) extends Serializable with Parameter {
-  lazy val length: Double = Vector.vectorLengthSqr(this)
+  lazy val normSqr: Double = Vector.vectorLengthSqr(this)
+  lazy val norm: Double = math.sqrt(Vector.vectorLengthSqr(this))
 
 
   def dotProduct(other: Vector): Double =

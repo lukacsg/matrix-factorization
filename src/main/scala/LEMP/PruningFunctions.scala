@@ -16,7 +16,7 @@ object PruningFunctions {
     * A filter function that selects vectors based on this pruning strategy
     */
   def lengthPruning(minLengthSqr: Double)(v: ItemVector): Boolean = {
-    v.vector.length * v.vector.length >= minLengthSqr
+    v.vector.norm * v.vector.norm >= minLengthSqr
   }
 
   /**
@@ -33,7 +33,7 @@ object PruningFunctions {
     */
   def coordPruning(f: Int, userVector: Vector, theta_b_q: Double): (ItemVector) => Boolean = {
     val (l_f, u_f) = {
-      val q_bar_f = userVector.value(f) / userVector.length
+      val q_bar_f = userVector.value(f) / userVector.norm
       val a = q_bar_f * theta_b_q
       val b = Math.sqrt((1 - theta_b_q * theta_b_q) * (1 - q_bar_f * q_bar_f))
       val L_f_prime = a - b
@@ -42,7 +42,7 @@ object PruningFunctions {
         if ((q_bar_f <= 0) || (U_f_prime < theta_b_q / q_bar_f)) U_f_prime else 1.0)
     }
     p: (ItemVector) =>
-      val p_bar_f = p.vector.value(f) / p.vector.length
+      val p_bar_f = p.vector.value(f) / p.vector.norm
       (l_f <= p_bar_f) && (p_bar_f <= u_f)
   }
 
@@ -67,7 +67,7 @@ object PruningFunctions {
         q_F_sqr += user.value(F(i)) * user.value(F(i))
         i += 1
       }
-      user.length * user.length - q_F_sqr
+      user.norm * user.norm - q_F_sqr
     }
     p: (ItemVector) =>
       var i = 0
@@ -83,7 +83,7 @@ object PruningFunctions {
 
       // The right hand side of the inequality is the square of this (need to check if positive)
       val u_bound = theta - q_F_p_F
-      (u_bound < 0.0) || (q_mF_sqr * (p.vector.length * p.vector.length - p_F_sqr) >= u_bound * u_bound)
+      (u_bound < 0.0) || (q_mF_sqr * (p.vector.norm * p.vector.norm - p_F_sqr) >= u_bound * u_bound)
   }
 }
 

@@ -51,5 +51,12 @@ abstract class ModelState[K,P]() {
     * @param key
     * @return
     */
-  def getOrElseInit(key: K): P
+  def getOrElseInit(key: K): P = 
+    get(key) match {
+      case Some(orig) => orig
+      case None =>
+        val newValue = initFunction(key)
+        set(key, newValue)
+        newValue
+    }
 }

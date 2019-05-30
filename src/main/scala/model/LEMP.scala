@@ -65,27 +65,27 @@ class LEMP(numFactors: Int, rangeMin: Double, rangeMax: Double, bucketSize: Int,
     * @param userVector
     * @return
     */
-  def pruneCandidateSet(topK: TopK, currentBucket: List[ItemVector], pruning: PruningStrategy,
+   private def pruneCandidateSet(topK: TopK, currentBucket: List[ItemVector], pruning: PruningStrategy,
                         focus: ItemId, focusSet: Array[ItemId], userVector: Vector): List[ItemVector] = {
     val theta = if (topK.length < K) 0.0 else topK.head.score
-    val theta_b_q = theta / (currentBucket.head.vector.length * userVector.length)
+    val theta_b_q = theta / (currentBucket.head.vector.norm * userVector.norm)
     val vectors = currentBucket
 
 
 
     vectors.filter(
       pruning match {
-        case LENGTH() => lengthPruning(theta / userVector.length)
+        case LENGTH() => lengthPruning(theta / userVector.norm)
         case COORD() => coordPruning(focus, userVector, theta_b_q)
         case INCR(_) => incrPruning(focusSet, userVector, theta)
         case LC(threshold) =>
-          if (currentBucket.head.vector.length > currentBucket.last.vector.length * threshold)
-            lengthPruning(theta / userVector.length)
+          if (currentBucket.head.vector.norm > currentBucket.last.vector.norm * threshold)
+            lengthPruning(theta / userVector.norm)
           else
             coordPruning(focus, userVector, theta_b_q)
         case LI(_, threshold) =>
-          if (currentBucket.head.vector.length > currentBucket.last.vector.length * threshold)
-            lengthPruning(theta / userVector.length)
+          if (currentBucket.head.vector.norm > currentBucket.last.vector.norm * threshold)
+            lengthPruning(theta / userVector.norm)
           else
             incrPruning(focusSet, userVector, theta)
       })
@@ -100,19 +100,18 @@ class LEMP(numFactors: Int, rangeMin: Double, rangeMax: Double, bucketSize: Int,
     val topK = createTopK
     val buckets = itemIdsDescendingByLength.toList.grouped(bucketSize)
 
-    val userVectorLength = userVector.length
+    val userVectorLength = userVector.norm
 
 
     breakable {
       for (currentBucket <- buckets) {
-        if ( !((topK.length < K) || (currentBucket.head.vector.length * userVectorLength > topK.head.score))) {
+        if ( !(topK.length < K || currentBucket.head.vector.norm * userVectorLength >= topK.head.score )) {
           break()
         }
         val (focus, focusSet) =  generateFocusSet(userVector, pruningStrategy)
 
         val candidates = pruneCandidateSet(topK, currentBucket, pruningStrategy, focus, focusSet, userVector)
 
-        //TODO check math
         for (item <- candidates) {
           val userItemDotProduct = Vector.dotProduct(userVector, item.vector)
 
@@ -155,28 +154,8 @@ class LEMP(numFactors: Int, rangeMin: Double, rangeMax: Double, bucketSize: Int,
   override def keys: Array[ItemId] =
     ids.toArray
 
-
   /**
-    * Returns the vector for the given id, or generates a new one if there ie none
-    * @param key
-    * @return
-    */
-  override def getOrElseInit(key: ItemId): Vector = {
-    get(key) match {
-      case Some(vector) => vector
-      case None =>
-        val initialVector = initFunction(key)
-
-        ids = ids + key
-        model.update(key, initialVector)
-        itemIdsDescendingByLength.add(ItemVector(key, initialVector))
-
-        initialVector
-    }
-  }
-
-  /**
-    * Returns the corresponding the value, if it doesn't exist, then init
+    * Returns the corresponding value, if it doesn't exist, then None
     *
     * @param key
     * @return
@@ -190,27 +169,23 @@ class LEMP(numFactors: Int, rangeMin: Double, rangeMax: Double, bucketSize: Int,
     * @param key
     * @param newValue
     */
-  override def set(key: ItemId, newValue: Vector): Unit = {
-    model.get(key) match {
-
-      case Some(oldValue) =>
-        model.update(key, newValue)
-        updateItemIdsByLength(key, newValue, oldValue)
-
-      case None =>
-        model.update(key, newValue)
-        itemIdsDescendingByLength.add(ItemVector(key, newValue))
-    }
+  override def set(key: ItemId, newValue: Vector): Unit = model.get(key) match {
+    case Some(oldValue) =>
+      model.update(key, newValue)
+      updateItemIdsByLength(key, newValue, oldValue)
+    case None =>
+      model.update(key, newValue)
+      itemIdsDescendingByLength.add(ItemVector(key, newValue))
+      ids = ids + key
   }
 
-  //TODO tests
   /**
     * Remove the previous length for the given id, and add the new one
     * @param key
     * @param updatedValue
     * @param oldValue
     */
-  def updateItemIdsByLength(key: ItemId, updatedValue: Vector, oldValue: Vector): Unit = {
+  private def updateItemIdsByLength(key: ItemId, updatedValue: Vector, oldValue: Vector): Unit = {
     itemIdsDescendingByLength.remove(ItemVector(key, oldValue))
     itemIdsDescendingByLength.add(ItemVector(key, updatedValue))
   }

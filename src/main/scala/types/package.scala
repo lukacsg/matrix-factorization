@@ -16,13 +16,13 @@ package object types {
     *   Always descending order
     * @param id
     */
-  case class ItemVector(id: ItemId, vector: Vector) extends Ordered[ItemVector] {
+ case class ItemVector(id: ItemId, vector: Vector) extends Ordered[ItemVector] {
     self =>
-    override def compare(that: ItemVector): UserId =
-      if(self.vector.length == that.vector.length)
+    override def compare(that: ItemVector): Int =
+      if(self.vector.normSqr == that.vector.normSqr)
         self.id compare that.id
       else
-        self.vector.length compare that.vector.length
+        -(self.vector.normSqr compare that.vector.normSqr)
   }
 
   /**
