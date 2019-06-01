@@ -1,4 +1,4 @@
-package optimizer
+package matrix.factorization.optimizer
 
 /**
   * Holds a function that computes delta updates based on a rating to the corresponding

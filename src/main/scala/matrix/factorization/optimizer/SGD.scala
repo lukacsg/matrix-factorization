@@ -1,4 +1,4 @@
-package optimizer
+package matrix.factorization.optimizer
 
 class SGD(learningRate: Double) extends Optimizer {
 

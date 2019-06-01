@@ -1,8 +1,8 @@
-package model
+package matrix.factorization.model
 
-import optimizer.SGD
-import types.{ItemId, TopK, Vector}
-import LEMP.PruningStrategy
+import matrix.factorization.optimizer.SGD
+import matrix.factorization.types.{ItemId, TopK, Vector}
+import matrix.factorization.LEMP.PruningStrategy
 
 import scala.util.Random
 

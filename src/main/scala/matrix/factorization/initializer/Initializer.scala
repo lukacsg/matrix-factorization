@@ -1,4 +1,4 @@
-package initializer
+package matrix.factorization.initializer
 
 /**
   * Holds a function to initialize a vector based on its id.

@@ -1,9 +1,9 @@
-package model
+package matrix.factorization.model
 
-import types._
-import LEMP._
-import LEMP.PruningFunctions.{coordPruning, incrPruning, lengthPruning}
-import initializer.RangedRandomFactorInitializerDescriptor
+import matrix.factorization.types._
+import matrix.factorization.LEMP._
+import matrix.factorization.LEMP.PruningFunctions.{coordPruning, incrPruning, lengthPruning}
+import matrix.factorization.initializer.RangedRandomFactorInitializerDescriptor
 import scala.collection.mutable
 import scala.util.control.Breaks.{break, breakable}
 

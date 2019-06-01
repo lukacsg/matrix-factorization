@@ -1,4 +1,4 @@
-package initializer
+package matrix.factorization.initializer
 
 import scala.util.Random
 

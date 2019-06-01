@@ -1,6 +1,6 @@
-package LEMP
+package matrix.factorization.LEMP
 
-import types.{Vector, ItemVector}
+import matrix.factorization.types.{Vector, ItemVector}
 /**
   * Implementations for LEMP Pruning functions from this paper:
   * https://ub-madoc.bib.uni-mannheim.de/40018/1/teflioudi15lemp.pdf

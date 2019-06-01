@@ -1,3 +1,5 @@
+package matrix.factorization
+
 import scala.collection.mutable
 
 package object types {
@@ -26,7 +28,7 @@ package object types {
   }
 
   /**
-    * Import properties to have:
+    * import matrix.factorization.properties to have:
     *   always descending on score
     * @param itemId
     * @param score

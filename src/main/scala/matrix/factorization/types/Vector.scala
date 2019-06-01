@@ -1,4 +1,4 @@
-package types
+package matrix.factorization.types
 
 case class Vector(value: Array[Double]) extends Serializable with Parameter {
   lazy val normSqr: Double = Vector.vectorLengthSqr(this)

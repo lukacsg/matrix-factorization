@@ -1,4 +1,4 @@
-package model
+package matrix.factorization.model
 
 /**
   * Represents a machine learning model.
