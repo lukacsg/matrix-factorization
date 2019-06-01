@@ -23,7 +23,7 @@ class LEMPTest extends FlatSpec with PropertyChecks with Matchers with PrivateMe
 
   lazy val lempDefault = new LEMP(numFactorsDefault, rangeMinDefault, rangeMaxDefault, bucketSizeDefault, KDefault, pruningStrategyDefault)
 
-  val getItemIdsDescendingByLength = PrivateMethod[mutable.TreeSet[ItemVector]]('getItemIdsDescendingByLength)
+  val getItemIdsDescendingByLength = PrivateMethod[mutable.TreeSet[ItemVector]]('itemIdsDescendingByLength)
 
   "initFunction" should "generate the same vector for the same id within the given range" in {
     for{
