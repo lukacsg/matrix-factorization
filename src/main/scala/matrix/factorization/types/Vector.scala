@@ -1,5 +1,7 @@
 package matrix.factorization.types
 
+import org.slf4j.LoggerFactory
+
 case class Vector(value: Array[Double]) extends Serializable with Parameter {
   lazy val normSqr: Double = Vector.vectorLengthSqr(this)
   lazy val norm: Double = math.sqrt(Vector.vectorLengthSqr(this))
@@ -23,6 +25,7 @@ case class Vector(value: Array[Double]) extends Serializable with Parameter {
 }
 
 object Vector {
+  private val log = LoggerFactory.getLogger(classOf[Vector])
 
   def apply(n: Int): Vector = new Vector(Array.ofDim[Double](n))
   /**
@@ -93,6 +96,10 @@ object Vector {
     while (i < n) {
       res(i) = u(i) + v(i)
       if (res(i).isNaN) {
+        println("u:" + Vector(u).toString)
+        println("v:" + Vector(v).toString)
+//        log.info("u:" + u)
+//        log.info("v:" + v)
         throw new FactorIsNotANumberException
       }
       i += 1
