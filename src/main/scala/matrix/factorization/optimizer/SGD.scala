@@ -17,11 +17,11 @@ class SGD(learningRate: Double, lambda: Double, normalizationThreshold: Double) 
 //      } else 1
 
       val normalizationUser = Math.sqrt(item.map(i => e * e * i *i).sum) match {
-        case x if x > normalizationThreshold => normalizationThreshold / x
+        case x if x > normalizationThreshold && normalizationThreshold > 0  => normalizationThreshold / x
         case _ => 1
       }
       val normalizationItem = Math.sqrt(user.map(i => e * e * i *i).sum) match {
-        case x if x > normalizationThreshold => normalizationThreshold / x
+        case x if x > normalizationThreshold && normalizationThreshold > 0 => normalizationThreshold / x
         case _ => 1
       }
 
